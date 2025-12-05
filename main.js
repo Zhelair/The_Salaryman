@@ -134,7 +134,7 @@ const messages = [];
 function showMessage(text) {
   messages.push({
     text,
-    time: 3, // seconds
+    time: 7, // seconds
   });
 }
 
