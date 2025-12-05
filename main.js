@@ -441,4 +441,67 @@ function setupMobileControls() {
     ? ["touchend", "touchcancel"]
     : ["mouseup", "mouseleave"];
 
-  functio
+  function setAction(action, pressed) {
+    if (action === "left") keys.left = pressed;
+    else if (action === "right") keys.right = pressed;
+    else if (action === "jump") keys.jump = pressed;
+    // later we can add "attack" here
+  }
+
+  mobileControls
+    .querySelectorAll("button[data-action]")
+    .forEach((btn) => {
+      const action = btn.dataset.action;
+
+      startEvents.forEach((ev) => {
+        btn.addEventListener(ev, (e) => {
+          e.preventDefault();
+          setAction(action, true);
+        });
+      });
+
+      endEvents.forEach((ev) => {
+        btn.addEventListener(ev, (e) => {
+          e.preventDefault();
+          setAction(action, false);
+        });
+      });
+    });
+}
+
+// === MAIN DRAW ===
+function draw() {
+  drawBackground();
+  drawGround();
+  drawCoffee();
+  drawMoney();
+  drawHRDrone();
+  drawPlayer();
+  drawUI();
+  drawGameOverOverlay();
+}
+
+// === GAME LOOP ===
+function gameLoop(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const dt = (timestamp - lastTime) / 1000;
+  lastTime = timestamp;
+
+  update(dt);
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  draw();
+
+  requestAnimationFrame(gameLoop);
+}
+
+// === START GAME ===
+loadAssets()
+  .then(() => {
+    console.log("Assets loaded, starting game...");
+    setupMobileControls();
+    requestAnimationFrame(gameLoop);
+    showMessage("Morning commute: try not to burn out before the office.");
+  })
+  .catch((err) => {
+    console.error("Error loading assets:", err);
+  });
