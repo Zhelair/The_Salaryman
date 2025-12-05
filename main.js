@@ -134,7 +134,7 @@ const messages = [];
 function showMessage(text) {
   messages.push({
     text,
-    time: 7, // seconds
+    time: 7, // seconds on screen
   });
 }
 
@@ -401,7 +401,7 @@ function drawUI() {
   ctx.textAlign = "center";
   let msgY = 90;
   for (const msg of messages) {
-    const alpha = Math.min(1, msg.time); // fade in a bit at start
+    const alpha = Math.min(1, msg.time / 2); // gentle fade-in
     ctx.fillStyle = `rgba(0, 0, 0, ${0.6 * alpha})`;
     ctx.fillRect(WIDTH / 2 - 260, msgY - 20, 520, 26);
     ctx.fillStyle = `rgba(255, 238, 136, ${alpha})`;
@@ -428,38 +428,17 @@ function drawGameOverOverlay() {
   ctx.fillText("Refresh the page to retry.", WIDTH / 2, HEIGHT / 2 + 40);
 }
 
-// === MAIN DRAW ===
-function draw() {
-  drawBackground();
-  drawGround();
-  drawCoffee();
-  drawMoney();
-  drawHRDrone();
-  drawPlayer();
-  drawUI();
-  drawGameOverOverlay();
-}
+// === MOBILE / TOUCH CONTROLS ===
+function setupMobileControls() {
+  const mobileControls = document.getElementById("mobileControls");
+  if (!mobileControls) return;
 
-// === GAME LOOP ===
-function gameLoop(timestamp) {
-  if (!lastTime) lastTime = timestamp;
-  const dt = (timestamp - lastTime) / 1000;
-  lastTime = timestamp;
+  const isTouch =
+    "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-  update(dt);
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-  draw();
+  const startEvents = isTouch ? ["touchstart"] : ["mousedown"];
+  const endEvents = isTouch
+    ? ["touchend", "touchcancel"]
+    : ["mouseup", "mouseleave"];
 
-  requestAnimationFrame(gameLoop);
-}
-
-// === START GAME ===
-loadAssets()
-  .then(() => {
-    console.log("Assets loaded, starting game...");
-    requestAnimationFrame(gameLoop);
-    showMessage("Morning commute: try not to burn out before the office.");
-  })
-  .catch((err) => {
-    console.error("Error loading assets:", err);
-  });
+  functio
