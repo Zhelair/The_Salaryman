@@ -6,7 +6,16 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="gameCanvas" width="960" height="540"></canvas>
+  <div id="gameWrapper">
+    <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+    <!-- Mobile / touch controls -->
+    <div id="mobileControls">
+      <button class="control-btn" data-action="left">◀</button>
+      <button class="control-btn" data-action="right">▶</button>
+      <button class="control-btn" data-action="jump">⤴</button>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>
